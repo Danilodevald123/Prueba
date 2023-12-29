@@ -1,0 +1,38 @@
+/* /src/styles/tailwind.css */
+/* /src/styles/tailwind.css */
+
+
+
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Agrega estilos personalizados aquí */
+
+/* Estilos globales */
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Estilos para el encabezado */
+header {
+  background-color: #3498db;
+  color: #fff;
+}
+
+/* Estilos para la barra lateral */
+aside {
+  background-color: #ecf0f1;
+  padding: 1rem;
+}
+
+/* Estilos para el modal */
+.bg-gray-800 {
+  background-color: rgba(0, 0, 0, 0.8);
+}
