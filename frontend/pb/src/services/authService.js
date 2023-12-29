@@ -49,7 +49,7 @@ export const Login = (setUserData,formData,tipoAccion) => {
     .catch((e) => {
       console.log({e})
       console.log(tipoAccion)
-      if(tipoAccion === "registro"){
+      if(tipoAccion = "registro"){
         const error = (e.response.data.error)
         MySwal.fire({
           target: document.getElementById('form_login') ,

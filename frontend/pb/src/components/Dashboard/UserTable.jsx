@@ -1,20 +1,31 @@
 import React, { useState } from 'react';
 import Modal from './ModalModificarUsuario';
 import Perfil from '../User/Perfil';
+import Activo from '../User/Activo';
 
 const UserTable = ({ users, token, setChange }) => {
+  const [changeIcon,setChangeIcon] = useState(false)
   const [selectedUser, setSelectedUser] = useState({});
   const [showConceptos, setShowConceptos] = useState(false);
+  const [showActivo, setShowActivo] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
   const ocultarConceptos = () => {
     setShowConceptos(false);
   };
+  const ocultarActivos = () => {
+    setShowActivo(false);
+  };
 
   const handleLogoClick = (user) => {
     setSelectedUser(user);
     setShowConceptos(true);
+  };
+
+  const handleActivoclick = (user) => {
+    setSelectedUser(user);
+    setShowActivo(true);
   };
 
   const getStatusIcon = (isActive) => {
@@ -86,7 +97,7 @@ const UserTable = ({ users, token, setChange }) => {
               <td className="px-6 py-4 whitespace-nowrap">{user.apellido}</td>
               <td className="px-6 py-4 whitespace-nowrap">{user.rol}</td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <button onClick={() => handleLogoClick(user)}>
+                <button onClick={() => handleActivoclick(user)}>
                   {getStatusIcon(user.activo)}
                 </button>
               </td>
@@ -135,6 +146,12 @@ const UserTable = ({ users, token, setChange }) => {
       <Modal isOpen={showConceptos} onClose={ocultarConceptos}>
         <div className="p-4">
           <Perfil user={selectedUser} token={token} setChange={setChange} />
+        </div>
+      </Modal>
+
+      <Modal isOpen={showActivo} onClose={ocultarActivos}>
+        <div className="p-4">
+          <Activo user={selectedUser} token={token} setChange={setChange} />
         </div>
       </Modal>
     </div>

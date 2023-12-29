@@ -11,50 +11,55 @@ import Swal from "sweetalert2";
 import withReactContent from 'sweetalert2-react-content';
 import { useEffect, useState } from "react";
 
-
-
+/**
+ * Componente principal de la aplicación.
+ * 
+ * @function App
+ * @returns {JSX.Element} Elemento JSX que representa la aplicación.
+ */
 function App() {
-  const [userData,setUserData] = useState("")
-  const MySwal = withReactContent(Swal)
-  
-  useEffect(()=>{
+  // Estado para almacenar los datos del usuario.
+  const [userData, setUserData] = useState("");
+
+  // Instancia de SweetAlert2 para utilizar en la aplicación.
+  const MySwal = withReactContent(Swal);
+
+  /**
+   * Efecto secundario que se ejecuta después de que el componente se monta.
+   * Verifica si hay datos de usuario almacenados en el almacenamiento local y los carga en el estado.
+   * 
+   * @function useEffect
+   * @memberof App
+   */
+  useEffect(() => {
     const loggerUserJSON = window.localStorage.getItem('data sesiom');
     if (loggerUserJSON) {
       const user = JSON.parse(loggerUserJSON);
       setUserData(user);
-    } 
-  }, [])
-  
+    }
+  }, []);
 
+  return (
+    <Router>
+      <div>
+        <Routes>
+          {/* Rutas de la aplicación */}
+          <Route path="/" element={<Inicio />} />
+          <Route path="/register" element={<Registerr />} />
+          <Route path="/usuario" element={<Usuario />} />
+          <Route path="/PerfilData" element={<PerfilData />} />
 
-
- return ( 
- <Router>
-  <div>
-    <Routes>
-        <Route path="/" element={<Inicio/>} />
-        <Route path="/register" element={<Registerr/>} />
-        <Route path="/usuario" element={<Usuario/>} />
-        
-        <Route path="/PerfilData" element={<PerfilData/>} />
-
-
-
-        {userData.rol === "admin" ? (
-          <>
-            <Route path="/admin" element={<Admin/>} />
-          </>
-        ) : (
-          <Route path="*" element={<Inicio/>} /> 
-        )  }
-
-    </Routes> 
-  </div>
-</Router>
-
-
-
-
+          {/* Ruta condicional para administradores */}
+          {userData.rol === "admin" ? (
+            <>
+              <Route path="/admin" element={<Admin />} />
+            </>
+          ) : (
+            <Route path="*" element={<Inicio />} />
+          )}
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

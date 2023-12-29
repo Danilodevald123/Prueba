@@ -6,9 +6,10 @@ import * as userService from "../../services/userService";
 import { Profilesvg } from "../../utils/profilesvg";
 
 const Perfil = ({ user, token, setChange }) => {
-  const [contrasenasCoinciden, setContrasenasCoinciden] = useState(true);
   const tokenn = token
  
+
+  console.log(user)
 
   const formik = useFormik({
     initialValues: {
@@ -31,7 +32,6 @@ const Perfil = ({ user, token, setChange }) => {
       try {
         
         userService.EditarEmpleado(formik.values, setChange, tokenn )
-        e.preventDefault();
        
       } catch (error) {
         console.error("Error al enviar el formulario:", error);
@@ -39,7 +39,7 @@ const Perfil = ({ user, token, setChange }) => {
     }
   });
 
-
+  console.log(formik.values,"este es")
 
 
   

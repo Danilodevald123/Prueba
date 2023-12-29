@@ -12,6 +12,11 @@ const Admin = () => {
   const [change,setChange] = useState(false)
   const MySwal = withReactContent(Swal);
 
+
+
+    console.log(userss)
+
+
   useEffect(() => {
     const loggerUserJSON = window.localStorage.getItem('data sesiom');
     if (loggerUserJSON) {
@@ -19,12 +24,10 @@ const Admin = () => {
       setUserData(user);
       setTokenn(user.accessToken)
 
-    } else {
-      console.log("no hay usuario");
-    }
+    } 
   }, []);
 
-  const fetchData = () => {
+  const fetchData = async () => {
     
     axios.get('http://localhost:3030/users/usuarios', {
       headers: {
@@ -32,7 +35,6 @@ const Admin = () => {
       },
     })
       .then((res) => {
-        console.log(res.data);
         setUserss(res.data);
       })
       .catch((error) => {
@@ -50,13 +52,16 @@ const Admin = () => {
   };
 
   useEffect(() => {
-    if (userData) {
-      fetchData();
-      setChange(false)
-    }
+    const fetchDataAndResetChange = async () => {
+      if (userData) {
+        await fetchData();
+        setChange(false);
+      }
+    };
+  
+    fetchDataAndResetChange();
   }, [userData, change]);
 
-  console.log(userss)
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
