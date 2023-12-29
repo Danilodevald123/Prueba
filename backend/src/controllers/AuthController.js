@@ -55,18 +55,7 @@ const sso = async (req, res) => {
                 });
             }
 
-            let usuario = await Usuario.findOne({
-                where: {
-                    email: email,
-                },
-            });
-    
-            if (usuario) {
-                // Si el usuario ya existe, devuelve un error
-                return res.status(400).json({
-                    error: "El email ya está registrado",
-                });
-            }
+           
     
             usuario = await Usuario.findOne({
                 where: {
@@ -80,13 +69,6 @@ const sso = async (req, res) => {
                     error: "El DNI ya está registrado",
                 });
             }
-
-
-
-
-
-
-
 
             const hashedPassword = await bcrypt.hash(contrasena, 10);
 

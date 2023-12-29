@@ -4,8 +4,8 @@ import withReactContent from 'sweetalert2-react-content';
 
 
 
-export const Login = (setUserData,formData,) => {
-  console.log("entre")
+export const Login = (setUserData,formData,tipoAccion) => {
+  console.log(tipoAccion)
   const MySwal = withReactContent(Swal)
   axios.post("http://localhost:3030/auth/sso", 
     formData
@@ -48,13 +48,22 @@ export const Login = (setUserData,formData,) => {
     })
     .catch((e) => {
       console.log({e})
-      
+      console.log(tipoAccion)
+      if(tipoAccion === "registro"){
+        const error = (e.response.data.error)
+        MySwal.fire({
+          target: document.getElementById('form_login') ,
+          icon: "error",
+          text: error ? error : "el email ya existexxx",
+        });
+      } else {
+      const errorr = "la contraseña no coincide"
       const error = (e.response.data.error)
       MySwal.fire({
-        target: document.getElementById('form_login'),
+        target: document.getElementById('form_login') ,
         icon: "error",
-        text: error,
+        text: error ? error : errorr,
       });
-
+      }
     });
 }

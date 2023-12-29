@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import * as authService from "../../services/authService"
 
 const Login = () => {
+  const tipoAccion = "login"
   
   const [formData, setFormData] = useState({
     email: '',
@@ -18,19 +19,12 @@ const Login = () => {
     
 };
 
-  console.log(userData,"aca esta lo que devuelve")
-  console.log(formData, "esta es")
-
   const submitHandler =  (e) => {
-    authService.Login(setUserData,formData);
+    authService.Login(setUserData,formData, tipoAccion);
     e.preventDefault();
 
    
   };
-
-  
-
-
 
   return (
     <>

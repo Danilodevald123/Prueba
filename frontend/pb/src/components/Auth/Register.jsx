@@ -5,6 +5,7 @@ import * as authService from '../../services/authService';
 
 const Register = () => {
     const [file, setFile] = useState(null);
+    const tipoAccion = "registro"
 
     const [userData,setUserData] = useState("");
   const formik = useFormik({
@@ -22,7 +23,7 @@ const Register = () => {
       nombre: Yup.string().required('Campo requerido'),
       apellido: Yup.string().required('Campo requerido'),
       fechaNacimiento: Yup.date().required('Campo requerido'),
-      dni: Yup.number().required('Campo requerido').min(8, 'El DNI debe contener al menos 8 numeros'),
+      dni: Yup.number().required('Campo requerido').positive("El DNI tiene que ser postivo").min(10000000, 'El DNI debe contener al menos 8 numeros').max(99999999, 'El DNI debe contener hasta 8 numeros'),
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
@@ -38,16 +39,16 @@ const Register = () => {
         if (file) {
           formDataWithFile.append('fotoPerfil', file);
         }
-        console.log(formDataWithFile)
-        await authService.Login(setUserData, formDataWithFile);
+        await authService.Login(setUserData, formDataWithFile, tipoAccion);
       } catch (error) {
         console.error('Error al enviar el formulario:', error);
       }
     },
   });
 
-  console.log(userData)
+
   console.log(formik.values)
+
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);

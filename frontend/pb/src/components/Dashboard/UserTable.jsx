@@ -115,17 +115,6 @@ const UserTable = ({ users, token, setChange }) => {
       <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm text-gray-700">
-              mostrando
-              <span className="font-medium">{" " + indexOfFirstItem+ 1 + "  "}</span>
-              de
-              <span className="font-medium">{" "  +indexOfLastItem  + "  "}</span>
-              en
-              <span className="font-medium">{ "  " + users.length + " "}</span>
-              resultados
-            </p>
-          </div>
-          <div>
             <nav className="inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
               {Array.from({ length: Math.ceil(users.length / itemsPerPage) }).map((_, index) => (
                 <a

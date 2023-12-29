@@ -22,7 +22,6 @@ const Usuario = db.define("Usuario", {
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
     },
     contrasena: {
         type: DataTypes.STRING,

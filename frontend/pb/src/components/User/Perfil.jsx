@@ -3,68 +3,59 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import * as userService from "../../services/userService";
+import { Profilesvg } from "../../utils/profilesvg";
 
 const Perfil = ({ user, token, setChange }) => {
   const [contrasenasCoinciden, setContrasenasCoinciden] = useState(true);
-  const [file, setFile] = useState(null);
   const tokenn = token
+ 
 
   const formik = useFormik({
     initialValues: {
       email: user.email || "",
-      contrasena: "",
-      contrasenaRepetida: "",
       nombre: user.nombre || "",
       apellido: user.apellido || "",
       fechaNacimiento: user.fechaNacimiento
         ? user.fechaNacimiento.slice(0, 10)
         : "",
-      dni: user.dni || "",
+      dni: Number(user.dni) || 0,
     },
     validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Correo electrónico inválido")
-        .required("Campo requerido"),
-      contrasena: Yup.string().min(
-        6,
-        "La contraseña debe tener al menos 6 caracteres"
-      ),
-      contrasenaRepetida: Yup.string().oneOf(
-        [Yup.ref("contrasena"), null],
-        "Las contraseñas deben coincidir"
-      ),
-      nombre: Yup.string().required("Campo requerido"),
-      apellido: Yup.string().required("Campo requerido"),
-      fechaNacimiento: Yup.date().required("Campo requerido"),
-      dni: Yup.string().required("Campo requerido"),
+      email: Yup.string().email('Correo electrónico inválido, debe contener @').required('Campo requerido'),
+      nombre: Yup.string().required('Campo requerido'),
+      apellido: Yup.string().required('Campo requerido'),
+      fechaNacimiento: Yup.date().required('Campo requerido'),
+      dni: Yup.number().required('Campo requerido').positive("El DNI tiene que ser postivo").min(10000000, 'El DNI debe contener al menos 8 numeros').max(99999999, 'El DNI debe contener hasta 8 numeros')
     }),
-    
+    onSubmit : async (e) => {
+      try {
+        
+        userService.EditarEmpleado(formik.values, setChange, tokenn )
+        e.preventDefault();
+       
+      } catch (error) {
+        console.error("Error al enviar el formulario:", error);
+      }
+    }
   });
 
 
-  const submitHandler = (e) => {
-    try {
-      
-      userService.EditarEmpleado(formik.values, setChange, tokenn , () => setShowForm(false));
-      e.preventDefault();
-     
-    } catch (error) {
-      console.error("Error al enviar el formulario:", error);
-    }
-  }
+
+
   
-
-  console.log(formik.values)
-
   useEffect(() => {
     formik.setValues({
       ...user,
+      dni: Number(user.dni),
       fechaNacimiento: user.fechaNacimiento
         ? user.fechaNacimiento.slice(0, 10)
         : "",
       contrasena: "",
     });
   }, [user]);
+
+  
+ 
 
   return (
     <div id="form_modificar_usuario" className="max-w-md mx-auto mt-8 p-6 bg-white rounded-md shadow-md">
@@ -78,7 +69,7 @@ const Perfil = ({ user, token, setChange }) => {
             Foto de perfil
           </label>
           <div className="mt-2 flex items-center gap-x-3">
-            {formik.values.fotoPerfil ? (
+            {formik.values.fotoPerfil && formik.values.fotoPerfil != undefined ? (
               <img
                 src={"src/htdocs/" + formik.values.fotoPerfil}
                 alt="Perfil"
@@ -94,7 +85,9 @@ const Perfil = ({ user, token, setChange }) => {
                 fill="currentColor"
                 aria-hidden="true"
               >
-                {/* SVG path */}
+                <Profilesvg />
+                
+                
               </svg>
             )}
           </div>
@@ -117,51 +110,6 @@ const Perfil = ({ user, token, setChange }) => {
           />
           {formik.touched.email && formik.errors.email && (
             <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label
-            htmlFor="contrasena"
-            className="block text-gray-600 text-sm font-medium mb-2"
-          >
-            Contraseña
-          </label>
-          <input
-            type="password"
-            id="contrasena"
-            name="contrasena"
-            value={formik.values.contrasena}
-            onChange={formik.handleChange}
-            className={`border p-2 w-full ${formik.touched.contrasena && formik.errors.contrasena ? "border-red-500" : ""}`}
-          />
-          {formik.touched.contrasena && formik.errors.contrasena && (
-            <p className="text-red-500 text-xs mt-1">{formik.errors.contrasena}</p>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label
-            htmlFor="contrasenaRepetida"
-            className="block text-gray-600 text-sm font-medium mb-2"
-          >
-            Repetir Contraseña
-          </label>
-          <input
-            type="password"
-            id="contrasenaRepetida"
-            name="contrasenaRepetida"
-            value={formik.values.contrasenaRepetida}
-            onChange={formik.handleChange}
-            className={`border p-2 w-full ${formik.touched.contrasenaRepetida && formik.errors.contrasenaRepetida ? "border-red-500" : ""}`}
-          />
-          {formik.touched.contrasenaRepetida && formik.errors.contrasenaRepetida && (
-            <p className="text-red-500 text-xs mt-1">{formik.errors.contrasenaRepetida}</p>
-          )}
-          {!contrasenasCoinciden && (
-            <p className="text-red-500 text-xs mt-1">
-              Las contraseñas no coinciden
-            </p>
           )}
         </div>
 
@@ -233,7 +181,7 @@ const Perfil = ({ user, token, setChange }) => {
             DNI
           </label>
           <input
-            type="text"
+            type="number"
             id="dni"
             name="dni"
             value={formik.values.dni}
@@ -248,9 +196,8 @@ const Perfil = ({ user, token, setChange }) => {
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
-          disabled={!contrasenasCoinciden}
-          onClick={submitHandler}
-          
+          disabled={formik.isSubmitting}
+       
         >
           Modificar
         </button>
