@@ -47,7 +47,7 @@ const Register = () => {
   });
 
 
-  console.log(formik.values)
+
 
 
   const handleFileChange = (e) => {

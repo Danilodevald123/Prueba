@@ -5,15 +5,11 @@ import withReactContent from 'sweetalert2-react-content';
 
 
 export const Login = (setUserData,formData,tipoAccion) => {
-  console.log(tipoAccion)
   const MySwal = withReactContent(Swal)
   axios.post("http://localhost:3030/auth/sso", 
     formData
   ).then((res) => {
       const data = res.data;
-      console.log(data.rol)
-
-        // console.log(data)
       if (data) {
         
         setUserData(data)
@@ -47,9 +43,7 @@ export const Login = (setUserData,formData,tipoAccion) => {
 
     })
     .catch((e) => {
-      console.log({e})
-      console.log(tipoAccion)
-      if(tipoAccion = "registro"){
+      if(tipoAccion === "registro"){
         const error = (e.response.data.error)
         MySwal.fire({
           target: document.getElementById('form_login') ,

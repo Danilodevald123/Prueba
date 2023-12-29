@@ -7,15 +7,12 @@ const MySwal = withReactContent(Swal)
 
 
 export const EditarEmpleado = (formData, setChange , token) => {
-  console.log(token,"este es el token")
-  console.log(formData,"esat es la data")
   axios.put("http://localhost:3030/user/modificar/" + formData.id, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }
   ).then((res) => {
-    // console.log({res})
     if (res.data) {
       MySwal.fire({
         target: document.getElementById('form_modificar_usuario'),
@@ -29,7 +26,6 @@ export const EditarEmpleado = (formData, setChange , token) => {
         } 
       });
     } else {
-      console.log(res.data)
       MySwal.fire({
         target: document.getElementById('form_modificar_usuario'),
         title: "<p>Atención</p>",
@@ -40,7 +36,6 @@ export const EditarEmpleado = (formData, setChange , token) => {
     }
   })
   .catch((e) => {
-    console.log({e});
     MySwal.fire({
       target: document.getElementById('form_modificar_usuario'),
       icon: "error",

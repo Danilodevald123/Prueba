@@ -9,7 +9,7 @@ const Perfil = ({ user, token, setChange }) => {
   const tokenn = token
  
 
-  console.log(user)
+
 
   const formik = useFormik({
     initialValues: {
@@ -39,7 +39,6 @@ const Perfil = ({ user, token, setChange }) => {
     }
   });
 
-  console.log(formik.values,"este es")
 
 
   
