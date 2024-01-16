@@ -1,7 +1,3 @@
-
-
-
-
 const bcrypt = require("bcrypt");
 const Usuario = require("../models/Usuario");
 const { generateAccessToken } = require("../middlewares/jwt");
@@ -12,6 +8,13 @@ const { uploadFile } = require("../utils/ftp");
 // Configuración de variables de entorno
 dotenv.config();
 
+/**
+ * Autenticación de usuario (SSO - Single Sign-On)
+ *
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @returns {void} - La función no devuelve un valor directamente, sino que responde a través de `res`.
+ */
 const sso = async (req, res) => {
     try {
         let {
@@ -39,6 +42,7 @@ const sso = async (req, res) => {
             }
         }
 
+        // Buscar el usuario en la base de datos
         let usuario = await Usuario.findOne({
             where: {
                 email: email,
@@ -55,14 +59,13 @@ const sso = async (req, res) => {
                 });
             }
 
-           
-    
+            // Verificar si el DNI ya está registrado
             usuario = await Usuario.findOne({
                 where: {
                     dni: dni,
                 },
             });
-    
+
             if (usuario) {
                 // Si el DNI ya está registrado, devuelve un error
                 return res.status(400).json({
@@ -72,16 +75,18 @@ const sso = async (req, res) => {
 
             const hashedPassword = await bcrypt.hash(contrasena, 10);
 
-
+            // Subir archivo si está presente en la solicitud
             if (req.file) {
                 try {
                     await uploadFile(req, res);
                 } catch (error) {
-                    console.error("Error al subir el archivoxxx:", error);
+                    console.error("Error al subir el archivo:", error);
                     res.status(500).json({ error: "Error al subir el archivo" });
                     return;  // Detenemos la ejecución si hay un error en la subida del archivo
                 }
             }
+
+            // Crear nuevo usuario en la base de datos
             usuario = await Usuario.create({
                 nombre,
                 apellido,
@@ -89,27 +94,20 @@ const sso = async (req, res) => {
                 dni,
                 email: email,
                 contrasena: hashedPassword,
-                fotoPerfil : req.file ? "fotos/" + req.file.originalname : "",
+                fotoPerfil: req.file ? "fotos/" + req.file.originalname : "",
                 rol
             });
 
-            
-
             usuarioNuevo = true;
-
-
-           
-
-
         } else if (!req.headers['authorization']) {
-            // Si el usuario existe, comparamos las contrasenas
+            // Si el usuario existe, comparamos las contraseñas
             const compare =
                 usuario.contrasena === null && usuario.created_in_google === true
                     ? true
                     : await bcrypt.compare(contrasena, usuario.contrasena);
 
             if (!compare) {
-                return res.status(400).send("contrasena incorrecta");
+                return res.status(400).send("contraseña incorrecta");
             }
         }
 
@@ -117,7 +115,7 @@ const sso = async (req, res) => {
         const token = generateAccessToken({ email: req.body.email }, "1d");
         const refreshToken = generateAccessToken({ email: req.body.email }, "1d");
 
-        // Construir el objeto de respuesta sin incluir la contrasena
+        // Construir el objeto de respuesta sin incluir la contraseña
         const respuestaUsuario = {
             id: usuario.id,
             nombre: usuario.nombre,

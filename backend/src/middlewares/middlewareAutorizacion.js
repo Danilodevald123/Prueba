@@ -1,13 +1,12 @@
 const Usuario = require("../models/Usuario");
 
 /**
- * Function to validate if user has admin rol
- * 
- * @returns 
- * 
- * @param {Object} req - http request object
- * @param {Object} req - http request object
- * @param {Object} req - http request object
+ * Middleware para autorizar el acceso solo a usuarios con el rol de administrador.
+ *
+ * @param {Object} req - Objeto de solicitud de Express.
+ * @param {Object} res - Objeto de respuesta de Express.
+ * @param {function} next - Función para pasar la solicitud al siguiente middleware.
+ * @returns {void} - La función no devuelve un valor directamente, sino que llama a `next` o responde a través de `res`.
  */
 const isAdmin = async (req, res, next) => {
     try {
